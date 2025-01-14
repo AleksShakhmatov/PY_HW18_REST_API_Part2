@@ -109,8 +109,20 @@ def test_add_some_item():
 
 
 def test_add_item_unauth_user():
+    
     with allure.step('Добавить товар в корзину через API'):
-        response3 = requests.post(url=URL + 'addproducttocart/catalog/75/1/1')
+        response4 = requests.post(url=URL + 'addproducttocart/catalog/31/1/1',
+                                  cookies={'NOPCOMMERCE.AUTH': cookie})
+        allure.attach(body=str(login.cookies),
+                      name='cookie',
+                      attachment_type=AttachmentType.TEXT,
+                      extension='txt')
 
-    with allure.step('Проверить добавление в корзину'):
-        assert response3.status_code == 200
+    with allure.step('Проверить добавление товара в корзину'):
+        assert response4.status_code == 200
+        browser.open(URL + 'cart')
+        browser.element('.product-name').should(have.text('14.1-inch Laptop'))
+
+    with allure.step('Очистить корзину'):
+        browser.open(URL + 'cart')
+        clear_cart()
