@@ -45,7 +45,7 @@ def test_add_one_item():
                       attachment_type=AttachmentType.TEXT,
                       extension='txt')
 
-    with allure.step('Проверить добаление товара в корзину'):
+    with allure.step('Проверить добавление товара в корзину'):
         assert response1.status_code == 200
         browser.open(URL + 'cart')
         browser.element('.product-name').should(have.text('14.1-inch Laptop'))
