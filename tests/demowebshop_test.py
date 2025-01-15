@@ -3,7 +3,6 @@ import requests
 from allure_commons.types import AttachmentType
 from selene import browser, have
 
-
 LOGIN = 'Coluchy@yandex.ru'
 PASSWORD = '123456789'
 URL = 'https://demowebshop.tricentis.com/'
@@ -45,7 +44,7 @@ def test_add_one_item():
                       attachment_type=AttachmentType.TEXT,
                       extension='txt')
 
-    with allure.step('Проверить добаление товара в корзину'):
+    with allure.step('Проверить добавление товара в корзину'):
         assert response1.status_code == 200
         browser.open(URL + 'cart')
         browser.element('.product-name').should(have.text('14.1-inch Laptop'))
@@ -109,8 +108,32 @@ def test_add_some_item():
 
 
 def test_add_item_unauth_user():
-    with allure.step('Добавить товар в корзину через API'):
-        response3 = requests.post(url=URL + 'addproducttocart/catalog/75/1/1')
+    with allure.step("Добавить товар в корзину через API"):
+        response4 = requests.post(URL + 'addproducttocart/catalog/31/1/1')
+        allure.attach(
+            body=response4.text,
+            name="Response",
+            attachment_type=AttachmentType.TEXT,
+            extension="txt")
+        allure.attach(
+            body=str(response4.cookies),
+            name="Cookies",
+            attachment_type=AttachmentType.TEXT,
+            extension="txt")
+        allure.attach(
+            body=str(response4.request.headers),
+            name="Request headers",
+            attachment_type=AttachmentType.TEXT,
+            extension="txt")
+        cookie = response4.cookies.get_dict()
 
-    with allure.step('Проверить добавление в корзину'):
-        assert response3.status_code == 200
+    with allure.step('Проверить добавление товара в корзину'):
+        assert response4.status_code == 200
+        browser.open(URL + "cart")
+        browser.driver.add_cookie({"name": "Nop.customer", "value": cookie["Nop.customer"]})
+        browser.open(URL + "cart")
+        browser.element('.product-name').should(have.text('14.1-inch Laptop'))
+
+    with allure.step('Очистить корзину'):
+        browser.open(URL + 'cart')
+        clear_cart()
