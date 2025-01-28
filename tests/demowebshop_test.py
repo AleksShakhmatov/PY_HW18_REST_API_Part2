@@ -52,6 +52,7 @@ def test_add_one_item():
     with allure.step('Очистить корзину'):
         browser.open(URL + 'cart')
         clear_cart()
+        browser.quit()
 
 
 def test_add_some_item():
@@ -105,6 +106,7 @@ def test_add_some_item():
     with allure.step('Чистим корзину'):
         browser.open(URL + 'cart')
         clear_cart()
+        browser.quit()
 
 
 def test_add_item_unauth_user():
@@ -137,3 +139,4 @@ def test_add_item_unauth_user():
     with allure.step('Очистить корзину'):
         browser.open(URL + 'cart')
         clear_cart()
+        browser.quit()
